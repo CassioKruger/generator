@@ -4,7 +4,7 @@
 
 u = 1e-3;       // unidade = mm
 mm = 1e-3;
-cm = 1e-2;      // unidade 
+cm = 1e-2;      // unidade
 deg2rad = Pi/180; // graus para radianos
 
 //Point(0) = {0,0,0,1.0}; //origem/
@@ -13,7 +13,7 @@ pp = "Input/Constructive parameters/";
 
 DefineConstant[
   NbrPolesInModel = { 6, Choices{ 2="2",6="6"}, Name "Input/20Number of poles in FE model", Highlight "Blue"},
-  InitialRotorAngle_deg = { 95, Name "Input/20Initial rotor angle [deg]", Highlight "AliceBlue"}
+  InitialRotorAngle_deg = { 30, Name "Input/20Initial rotor angle [deg]", Highlight "AliceBlue"}
   Flag_OpenStator = {1, Choices{0,1}, Name "Input/39Open slots in stator"}
 ];
 
@@ -101,7 +101,7 @@ DefineConstant[
   b_remanent = {1.2, Name StrCat[pp, "Remanent induction [T]"] }
 ];
 
-rpm_nominal = 300 ;
+rpm_nominal = 1200 ;
 Inominal = 10.9 ; // Nominal current
 Tnominal = 2.5 ; // Nominal torque
 

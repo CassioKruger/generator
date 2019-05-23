@@ -2,7 +2,7 @@
 //UFPel - Eng. de Controle e Automação
 //pdd1 - v4.0
 
-Include "pdd1_v4_1_data.geo";
+Include "generator_data.geo";
 
 DefineConstant[
   Flag_AnalysisType = {1,  Choices{0="Static",  1="Time domain"}, Name "Input/19Type of analysis", Highlight "Blue",
@@ -24,7 +24,7 @@ Flag_Cir = !Flag_SrcType_Stator ;
 Flag_ImposedCurrentDensity = Flag_SrcType_Stator ;
 
 Group{
-  
+
   Stator_Airgap = Region[STATOR_AIRGAP] ;
 
   Stator_Bnd_MB = Region[STATOR_BND_MOVING_BAND];
@@ -32,7 +32,7 @@ Group{
   Stator_Bnd_A1 = Region[STATOR_BND_A1] ;           //esquerda
 
   If(Flag_OpenStator)     //slot aberto do estator
-    Stator_Fe     = Region[STATOR_FE] ;         
+    Stator_Fe     = Region[STATOR_FE] ;
     Stator_Air    = Region[{STATOR_AIR,STATOR_SLOTOPENING}] ;
   EndIf
   If(!Flag_OpenStator)    //slot fechado do estator
@@ -43,7 +43,7 @@ Group{
   Rotor_Fe     = Region[ROTOR_FE] ;
   Rotor_Al     = Region[{}];
   Rotor_Cu     = Region[{}];
-  
+
   Rotor_Airgap = Region[ROTOR_AIRGAP] ;
 
   Rotor_Bnd_MB = Region[ROTOR_BND_MOVING_BAND] ;
@@ -127,34 +127,26 @@ Function {
   nbSlots[] = Ceil[nbInds/NbrPhases/2] ;
   SurfCoil[] = SurfaceArea[]{STATOR_IND_AM}/nbSlots[] ;//All inductors have the same surface
   //--------------------------------------------------
-/*
-  Surface_PM[] = SurfaceArea[]{ROTOR_MAGNET};
-
-  DefineConstant[ SurfPM = {Surface_PM[ROTOR_MAGNET], ReadOnly 1,
-                          Path "Output/2", Highlight "LightYellow" } ];
-*/
-  //--------------------------------------------------
-
 
   FillFactor_Winding = 0.5 ; // percentage of Cu in the surface coil side, smaller than 1
   Factor_R_3DEffects = 1.5 ; // bigger than Adding 50% of resistance
 
   DefineConstant[ rpm = { rpm_nominal, Name "Input/7speed in rpm",
-                   Highlight "AliceBlue", Visible (Flag_AnalysisType==1)} 
+                   Highlight "AliceBlue", Visible (Flag_AnalysisType==1)}
                 ]; // speed in rpm
 
   wr = rpm/60*2*Pi ; // speed in rad_mec/s
 
   // supply at fixed position
-  DefineConstant[ Freq = { wr*NbrPolePairs/(2*Pi), ReadOnly 1, 
-                  Name "Output/1Freq", Highlight "LightYellow" } 
+  DefineConstant[ Freq = { wr*NbrPolePairs/(2*Pi), ReadOnly 1,
+                  Name "Output/1Freq", Highlight "LightYellow" }
                 ];
 
   Omega = 2*Pi*Freq ;
   T = 1/Freq ;
 
-  DefineConstant[ thetaMax_deg = { 180, Name "Input/21End rotor angle (loop)",
-                  Highlight "AliceBlue", Visible (Flag_AnalysisType==1) }  
+  DefineConstant[ thetaMax_deg = { 360, Name "Input/21End rotor angle (loop)",
+                  Highlight "AliceBlue", Visible (Flag_AnalysisType==1) }
                 ];
 
   theta0   = InitialRotorAngle + 0. ;
@@ -206,6 +198,6 @@ If(Flag_SrcType_Stator)
 EndIf
 
 If(Flag_Cir)
-  Include "pdd1_v4_1_circuit.pro" ;
+  Include "generator_circuit.pro" ;
 EndIf
 Include "machine_magstadyn_a.pro" ;
