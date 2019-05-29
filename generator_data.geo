@@ -13,7 +13,7 @@ pp = "Input/Constructive parameters/";
 
 DefineConstant[
   NbrPolesInModel = { 6, Choices{ 2="2",6="6"}, Name "Input/20Number of poles in FE model", Highlight "Blue"},
-  InitialRotorAngle_deg = { 30, Name "Input/20Initial rotor angle [deg]", Highlight "AliceBlue"}
+  InitialRotorAngle_deg = { 0, Name "Input/20Initial rotor angle [deg]", Highlight "AliceBlue"}
   Flag_OpenStator = {1, Choices{0,1}, Name "Input/39Open slots in stator"}
 ];
 

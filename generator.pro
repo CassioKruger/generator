@@ -5,7 +5,7 @@
 Include "generator_data.geo";
 
 DefineConstant[
-  Flag_AnalysisType = {1,  Choices{0="Static",  1="Time domain"}, Name "Input/19Type of analysis", Highlight "Blue",
+  Flag_AnalysisType = {1,  Choices{0="Static",  1="Time domain", 2="Freq Domain"}, Name "Input/19Type of analysis", Highlight "Blue",
     Help Str["- Use 'Static' to compute static fields created in the machine",
       "- Use 'Time domain' to compute the dynamic response of the machine"]} ,
 
@@ -122,7 +122,7 @@ Function {
 
 
   //Data for modeling a stranded inductor
-  NbWires[]  = 104 ; // Number of wires per slot
+  NbWires[]  = 30 ; // Number of wires per slot
   // STATOR_IND_AM comprises all the slots in that phase, we need thus to divide by the number of slots
   nbSlots[] = Ceil[nbInds/NbrPhases/2] ;
   SurfCoil[] = SurfaceArea[]{STATOR_IND_AM}/nbSlots[] ;//All inductors have the same surface
@@ -145,7 +145,7 @@ Function {
   Omega = 2*Pi*Freq ;
   T = 1/Freq ;
 
-  DefineConstant[ thetaMax_deg = { 360, Name "Input/21End rotor angle (loop)",
+  DefineConstant[ thetaMax_deg = { 190, Name "Input/21End rotor angle (loop)",
                   Highlight "AliceBlue", Visible (Flag_AnalysisType==1) }
                 ];
 
