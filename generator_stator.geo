@@ -42,57 +42,58 @@ phase_c_plus_int[] = {9,10,21,22,23,35,36};		//7
 phase_c_minus_ext[] = {1,2,14,15,26,27,28};		//7
 phase_c_minus_int[] = {3,4,15,16,28,29};		//6
 
-i=0; half=0;
+i=0; half=1;
 
+/*
 //build stator slots
 For i In {0:N_ss-1}
 	 //build two halfs
 	 For half In {0:1}
-
+*/
 	 //Points definitions-----------------------------------------------------------------//
 	 //pontos de uma metade(direita) do slot (ranhura)
 	 dP=newp;
-	 Point(dP+0) = {0,0,0,m_coarse};
+	 Point(dP+0) = {0,0,0,1.0};
 	 //entrada direita do slot
-	 Point(dP+1) = {b_1/2, R_sin*Sin((Pi/2)-aux2), 0, 2*m_gap};
-	 Point(dP+2) = {b_1/2, h_r1-Sin(aux1)*r1, 0, m_sl_bot};
-	 Point(dP+3) = {0, h_r1-Sin(aux1)*r1, 0, m_sl_bot};
+	 Point(dP+1) = {b_1/2, R_sin*Sin((Pi/2)-aux2), 0, pslo};
+	 Point(dP+2) = {b_1/2, h_r1-Sin(aux1)*r1, 0, pslo};
+	 Point(dP+3) = {0, h_r1-Sin(aux1)*r1, 0, pslo};
 	 //centro do circulo inferior
-	 Point(dP+4) = {0, h_r1, 0, m_sl_bot};
+	 Point(dP+4) = {0, h_r1, 0, psl};
 	 //ponto mais a direita do circulo inferior
-	 Point(dP+5) = {b_2,  h_r1, 0, m_sl_bot};
+	 Point(dP+5) = {b_2,  h_r1, 0, psl};
 	 //centro do circulo superior
-	 Point(dP+6) = {0, h_r2, 0, m_sl_top};
+	 Point(dP+6) = {0, h_r2, 0, psl};
 	 //ponto mais a direita do circulo superior
-	 Point(dP+7) = {b_3, h_r2, 0, m_sl_top};
+	 Point(dP+7) = {b_3, h_r2, 0, psl};
 	 // ponto mais acima do circulo superior
-	 Point(dP+8) = {0, h_r2+r2, 0, m_sl_top};
+	 Point(dP+8) = {0, h_r2+r2, 0, pout};
 	 // outer stator sector
-	 Point(dP+9) = {R_sout*Sin(Pi/Qs), R_sout*Cos(Pi/Qs), 0, m_s_out};
+	 Point(dP+9) = {R_sout*Sin(Pi/Qs), R_sout*Cos(Pi/Qs), 0, pout};
 	 // outer stator center
-	 Point(dP+10) = {0, R_sout, 0, m_s_out};
+	 Point(dP+10) = {0, R_sout, 0, pout};
 	 // inner stator sector
-	 Point(dP+11) = {R_sin*Sin(Pi/Qs), R_sin*Cos(Pi/Qs), 0, 2.5*m_gap};
+	 Point(dP+11) = {R_sin*Sin(Pi/Qs), R_sin*Cos(Pi/Qs), 0, pslo};
 	 // sliding sector
-	 Point(dP+12) = {R_gs*Sin(Pi/Qs), R_gs*Cos(Pi/Qs), 0, m_gap*1.4};
+	 Point(dP+12) = {R_gs*Sin(Pi/Qs), R_gs*Cos(Pi/Qs), 0, pslo};
 	 //inner stator center
-	 Point(dP+13) = {0, R_sin, 0, 1.5*m_gap};
+	 Point(dP+13) = {0, R_sin, 0, pslo};
 	 //sliding center
-	 Point(dP+14) = {0, R_gs, 0, m_gap*140};
+	 Point(dP+14) = {0, R_gs, 0, pslo};
 
 	 //enrolamento mais interno
-	 Point(dP+15) = {0, 165.7920*u, 0, 1.5*m_gap}; 			
-	 Point(dP+16) = {largura_bob, 165.7920*u, 0, 1.5*m_gap};
-	 Point(dP+17) = {largura_bob, (165.7920*u)+altura_bob, 0, 1.5*m_gap};
-	 Point(dP+18) = {0, (165.7920*u)+altura_bob, 0, 1.5*m_gap};
+	 Point(dP+15) = {0, 165.7920*u, 0, 1.5*psl};
+	 Point(dP+16) = {largura_bob, 165.7920*u, 0, 1.5*psl};
+	 Point(dP+17) = {largura_bob, (165.7920*u)+altura_bob, 0, 1.5*psl};
+	 Point(dP+18) = {0, (165.7920*u)+altura_bob, 0, 1.5*psl};
 
 	 //enrolamento mais externo
-	 Point(dP+19) = {0, 176.1630*u, 0, 1.5*m_gap};
-	 Point(dP+20) = {largura_bob, 176.1630*u, 0, 1.5*m_gap};
-	 Point(dP+21) = {largura_bob, (176.1630*u)+altura_bob, 0, 1.5*m_gap};
-	 Point(dP+22) = {0, (176.1630*u)+altura_bob, 0, 1.5*m_gap};
+	 Point(dP+19) = {0, 176.1630*u, 0, 1.5*psl};
+	 Point(dP+20) = {largura_bob, 176.1630*u, 0, 1.5*psl};
+	 Point(dP+21) = {largura_bob, (176.1630*u)+altura_bob, 0, 1.5*psl};
+	 Point(dP+22) = {0, (176.1630*u)+altura_bob, 0, 1.5*psl};
 	 //Points definitions-----------------------------------------------------------------//
-	
+/*
 	 // rotate the built points to the i-th slot position
 	 For t In {dP+0:dP+22}
 	 	Rotate {{0,0,1},{0,0,0}, 2*Pi*i/Qs+2*Pi/Qs/2} {Point{t};}
@@ -103,54 +104,54 @@ For i In {0:N_ss-1}
 		 	Symmetry {Cos(2*Pi*i/Qs+2*Pi/Qs/2),Sin(2*Pi*i/Qs+2*Pi/Qs/2),0,0} {Point{t};}
 		 EndFor
 	 EndIf
-
+*/
 	 //Lines definitions-----------------------------------------------------------------//
 	dR=newl-1;
 	 //linha ventical da entrada do slot
-	 Line(dR+1) = {dP+1,dP+2};			
+	 Line(dR+1) = {dP+1,dP+2};
 	 //linha horizontal da entrada do slot
-	 Line(dR+2) = {dP+2,dP+3};			
+	 Line(dR+2) = {dP+2,dP+3};
 	 //primeiro arco, da antrada até o ponto mais a direita do circ inferor
-	 Circle(dR+3) = {dP+2,dP+4,dP+5};	
+	 Circle(dR+3) = {dP+2,dP+4,dP+5};
 	 //linha lateral do slot
-	 Line(dR+4) = {dP+5,dP+7};			
+	 Line(dR+4) = {dP+5,dP+7};
 	 //arco direito do circ superior
-	 Circle(dR+5) = {dP+7,dP+6,dP+8};	
+	 Circle(dR+5) = {dP+7,dP+6,dP+8};
 	 //sliding - borda do entreferro
-	 Circle(dR+6) = {dP+12,dP+0,dP+14};	
+	 Circle(dR+6) = {dP+12,dP+0,dP+14};
 	 //slot opening arc - parte inferior da seção
-	 Circle(dR+7) = {dP+11,dP+0,dP+1};	
+	 Circle(dR+7) = {dP+11,dP+0,dP+1};
 	 //arc inner teeth surface  - abertura da entrada do slot
 	 Circle(dR+8) = {dP+1,dP+0,dP+13};
 	 //outer stator - borda externa do estator
-	 Circle(dR+9) = {dP+9,dP+0,dP+10};	
+	 Circle(dR+9) = {dP+9,dP+0,dP+10};
 	 //vertical central slot opening - centro da entrada do slot
-	 Line(dR+10) = {dP+13,dP+3};		
+	 Line(dR+10) = {dP+13,dP+3};
 	 // centro do slot (dividido em 3 linhas, pois fica entre as bobinas também)
-	 Line(dR+11) = {dP+3,dP+15}; 		
-	 Line(dR+24) = {dP+18,dP+19}; 		
-	 Line(dR+25) = {dP+22,dP+8}; 		
+	 Line(dR+11) = {dP+3,dP+15};
+	 Line(dR+24) = {dP+18,dP+19};
+	 Line(dR+25) = {dP+22,dP+8};
 	 //vertical from top of the slot to the stator outer - centro do slot conectado com linha externa do estator
-	 Line(dR+12) = {dP+8,dP+10}; 		
+	 Line(dR+12) = {dP+8,dP+10};
 	 //sector border via steel - borda da seção (ferro)
-	 Line(dR+13) = {dP+11,dP+9};		
+	 Line(dR+13) = {dP+11,dP+9};
 	 //sector border via airgap - borda da seção (ar)
 	 Line(dR+14) = {dP+12,dP+11};
 	 //vertical sector center via gap - borda central da seção (ar)
-	 Line(dR+15) = {dP+14,dP+13}; 		
+	 Line(dR+15) = {dP+14,dP+13};
 
 	 //-------LINHAS PARA OS ENROLAMENTOS------------------//
 	 //enrolamento mais externo
-	 Line(dR+16) = {dP+15,dP+16};		
-	 Line(dR+17) = {dP+16,dP+17};		
-	 Line(dR+18) = {dP+17,dP+18};		
-	 Line(dR+19) = {dP+18,dP+15};		
+	 Line(dR+16) = {dP+15,dP+16};
+	 Line(dR+17) = {dP+16,dP+17};
+	 Line(dR+18) = {dP+17,dP+18};
+	 Line(dR+19) = {dP+18,dP+15};
 
 	 //enrolamento mais interno
-	 Line(dR+20) = {dP+19,dP+20};		
-	 Line(dR+21) = {dP+20,dP+21};			 
-	 Line(dR+22) = {dP+21,dP+22};			
-	 Line(dR+23) = {dP+22,dP+19};		
+	 Line(dR+20) = {dP+19,dP+20};
+	 Line(dR+21) = {dP+20,dP+21};
+	 Line(dR+22) = {dP+21,dP+22};
+	 Line(dR+23) = {dP+22,dP+19};
 
 	 //Lines definitions-----------------------------------------------------------------//
 
@@ -163,8 +164,8 @@ For i In {0:N_ss-1}
 	 If (Flag_OpenStator != 0)
 	 	InnerStator_[] += {dR+7,dR+1,dR+3,dR+4,dR+5}; //slot aberto
 	 EndIf
-	 
-	 OuterStator_[] += dR+9;	 
+
+	 OuterStator_[] += dR+9;
 	 StatorSliding_[] += {dR+6};
 	 //Periodic boundary
 	 If (Qs != N_ss)
@@ -177,14 +178,14 @@ For i In {0:N_ss-1}
 		 	StatorPeriod_Left_[] = {dR+13,dR+14};
 		 EndIf
 	 EndIf
-	 
+
 			 	//if mirrorred, then the lines order is reversed
 				//direction is important defining the Line Loops
 	 rev = (half ? -1 : 1);
 
-	 //TESTE PARA AS FASES 
-		
-	//FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_	 
+	 //TESTE PARA AS FASES
+
+	//FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_FASE_A_
 		 //fases A POSITIVA na parte EXTERNA
 		 For aux In {0:5:1}
 			 If(i == phase_a_plus_ext[aux])
@@ -221,7 +222,7 @@ For i In {0:N_ss-1}
 			 EndIf
 		 EndFor
 
-	//FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_	 
+	//FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_FASE_B_
 		//fases B POSITIVA na parte EXTERNA
 		For aux In {0:5:1}
 			 If(i == phase_b_plus_ext[aux])
@@ -258,7 +259,7 @@ For i In {0:N_ss-1}
 			 EndIf
 		 EndFor
 
-	//FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_	 
+	//FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_FASE_C_
 		 //fases C POSITIVA na parte EXTERNA
 		For aux In {0:5:1}
 			 If(i == phase_c_plus_ext[aux])
@@ -305,7 +306,7 @@ For i In {0:N_ss-1}
 	 Line Loop(newll) = {dR+20,dR+21,dR+22,dR+23};
 	 dH = news; Plane Surface(news) = -rev*{newll-1};
 	 StatorConductor_Ext[] += dH;
-	
+
 		//surface of the stator iron
 	 Line Loop(newll) = {dR+1,dR+3,dR+4,dR+5,dR+12,-(dR+9),-(dR+13),dR+7};
 	 dH = news; Plane Surface(news) = -rev*{newll-1};
@@ -315,7 +316,7 @@ For i In {0:N_ss-1}
 	 Line Loop(newll) = {dR+8,dR+10,-dR-2,-dR-1};
 	 dH = news; Plane Surface(news) = -rev*{newll-1};
 	 StatorSlotOpening_[] += dH;
-	
+
 		//airgap stator
 	 Line Loop(newll) = {dR+2, dR+11, dR+16, dR+17, dR+18, dR+24, dR+20, dR+21, dR+22,
 	 					dR+25, -(dR+5), -(dR+4), -(dR+3)};
@@ -325,10 +326,10 @@ For i In {0:N_ss-1}
 	 Line Loop(newll) = {dR+14, dR+7, dR+8, -(dR+15), -(dR+6)};
 	 dH = news; Plane Surface(news) = rev*{newll-1};
 	 StatorAirgapLayer_[] += dH;
-	
+/*
 	 EndFor
 EndFor
-
+*/
 // Completing moving band
 NN = #StatorSliding_[] ;
 k1 = (NbrPolesInModel==1)?NbrPolesInModel:NbrPolesInModel+1;
@@ -369,7 +370,7 @@ EndIf
 Physical Line(SURF_EXT) = {OuterStator_[]};
 Physical Line(STATOR_BND_MOVING_BAND) = {StatorSliding_[]};
 
-//---------------- Superficies para as fases (A,B,C) dos enrolamentos 
+//---------------- Superficies para as fases (A,B,C) dos enrolamentos
 
 Physical Surface("stator phase A (-)", STATOR_IND_AM) = {PhaseA_Minus_[]};
 Physical Surface("stator phase C (+)", STATOR_IND_CP) = {PhaseC_Plus_[]};
@@ -401,6 +402,3 @@ If(!Flag_OpenStator)
   nicepos_stator[] = CombinedBoundary{Surface{StatorIron_[],StatorSlotOpening_[]};};
   nicepos_stator[] += CombinedBoundary{Surface{StatorAirgapLayer_[], StatorAir_[]};};
 EndIf
-
-
-

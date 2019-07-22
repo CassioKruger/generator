@@ -145,7 +145,7 @@ Function {
   Omega = 2*Pi*Freq ;
   T = 1/Freq ;
 
-  DefineConstant[ thetaMax_deg = { 190, Name "Input/21End rotor angle (loop)",
+  DefineConstant[ thetaMax_deg = { 180, Name "Input/21End rotor angle (loop)",
                   Highlight "AliceBlue", Visible (Flag_AnalysisType==1) }
                 ];
 
