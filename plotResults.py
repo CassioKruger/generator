@@ -63,7 +63,7 @@ if (flag == '3'):
     posRotor1Deg = pd.read_csv("res/P_deg.dat",sep='  ', header=None, index_col=None,usecols=[1],engine= 'python')
     posRotor1Rad = pd.read_csv("res/P.dat",sep='  ', header=None, index_col=None,usecols=[1],engine= 'python')
     veloRotor1Rad_sec = pd.read_csv("res/V.dat",sep='  ', header=None, index_col=None,usecols=[1],engine= 'python')
-    veloRotor1Rpm = pd.read_csv("res/Vrpm.dat",sep='  ', header=None, index_col=None,usecols=[1],engine= 'python')
+    veloRotor1Rpm = pd.read_csv("res/Vrpm1.dat",sep='  ', header=None, index_col=None,usecols=[1],engine= 'python')
 
     posRotor2Deg = pd.read_csv("res/P_deg2.dat",sep='  ', header=None, index_col=None,usecols=[1],engine= 'python')
     posRotor2Rad = pd.read_csv("res/P2.dat",sep='  ', header=None, index_col=None,usecols=[1],engine= 'python')

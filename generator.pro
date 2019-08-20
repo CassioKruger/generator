@@ -14,7 +14,7 @@ DefineConstant[
 
   Flag_NL = { 1, Choices{0,1}, Name "Input/60Nonlinear BH-curve"},
 
-  Flag_NL_law_Type = { 0, Choices{
+  Flag_NL_law_Type = { 1, Choices{
       0="Analytical", 1="Interpolated",
       2="Analytical VH800-65D", 3="Interpolated VH800-65D"},
     Name "Input/61BH-curve", Highlight "Blue", Visible Flag_NL}
@@ -131,19 +131,41 @@ Function {
   FillFactor_Winding = 0.5 ; // percentage of Cu in the surface coil side, smaller than 1
   Factor_R_3DEffects = 1.5 ; // bigger than Adding 50% of resistance
 
-  DefineConstant[ rpm = { rpm_nominal, Name "Input/7speed in rpm",
-                   Highlight "AliceBlue", Visible (Flag_AnalysisType==1)}
-                ]; // speed in rpm
+  DefineConstant
+  [
+    rpm = { rpm_nominal, Name "Input/21Vel. em RPM", Highlight "LemonChiffon", Visible (Flag_AnalysisType==1),
+            Help Str["Velocidade do rotor de baixa rotação (turbina)"]
+          },
 
-  wr = rpm/60*2*Pi ; // speed in rad_mec/s
+    passoTempo = { 0.005, Name "Input/23Tempo de passo (s)", Highlight "Linen",
+                  Help Str["Intervalo de tempo de cada passo da simulação"]
+                 },
 
-  // supply at fixed position
-  DefineConstant[ Freq = { wr*NbrPolePairs/(2*Pi), ReadOnly 1,
-                  Name "Output/1Freq", Highlight "LightYellow" }
-                ];
+    tempoMax = { 0.12, Name "Input/24Tempo de simu (s)", Highlight "Linen",
+                Help Str["Tempo máximo da simulação da simulação"]
+               },
+    passoCarga = { 35, Name "Input/25Passo Carga", Highlight "Linen",
+                Help Str["Passo da simulação em que uma carga é adicionada, variando a velocidade"]
+               }
+  ]; // speed in rpm
 
-  Omega = 2*Pi*Freq ;
-  T = 1/Freq ;
+
+  smoothStep[] = ($TimeStep) <= (passoCarga) ? 0. : Tanh[Pi* ( (($TimeStep-passoCarga)*$DTime)/0.03 ) ];
+
+  rpmAux[] = ($TimeStep) <= (passoCarga) ? rpm : rpm - 400*smoothStep[]; //FUNCIONOU!!
+
+  wr[] = rpmAux[]/60*2*Pi ; // speed in rad_mec/s - BAIXA ROTACAO
+
+  Freq[] = wr[]*NbrPolePairs/(2*Pi);
+
+  Omega[] = 2*Pi*Freq[] ;
+  T[] = 1/Freq[] ;
+
+    // relaxation of applied voltage, for reducing the transient
+    NbTrelax = 2 ; // Number of periods while relaxation is applied
+    Trelax[] = NbTrelax*T[];
+    Frelax[] = (!Flag_NL || Flag_AnalysisType==0 || $Time>Trelax[]) ? 1. :
+               0.5*(1.-Cos[Pi*$Time/Trelax[]]) ; // smooth step function
 
   DefineConstant[ thetaMax_deg = { 180, Name "Input/21End rotor angle (loop)",
                   Highlight "AliceBlue", Visible (Flag_AnalysisType==1) }
@@ -152,26 +174,16 @@ Function {
   theta0   = InitialRotorAngle + 0. ;
   thetaMax = thetaMax_deg * deg2rad ; // end rotor angle (used in doing a loop)
 
-  DefineConstant[
-                  NbTurns  = { (thetaMax-theta0)/(2*Pi), Name "Input/24Number of revolutions",
-                    Highlight "LightGrey", ReadOnly 1, Visible (Flag_AnalysisType==1)},
+  //delta_theta_deg = 1;
+  delta_theta_deg[] = rpmAux[]*passoTempo;
 
-                  delta_theta_deg = { 1., Name "Input/22Step [deg]",
-                    Highlight "AliceBlue", Visible (Flag_AnalysisType==1)}
-                ];
-
-  delta_theta[] = delta_theta_deg * deg2rad ;
+  delta_theta[] = delta_theta_deg[] * deg2rad ;
 
   time0 = 0 ; // at initial rotor position
-  delta_time = delta_theta_deg * deg2rad/wr;
-  timemax = thetaMax/wr;
+  delta_time[] = delta_theta_deg[] * deg2rad/wr[];
+  timemax[] = thetaMax/wr[];
 
-  DefineConstant[
-                  NbSteps = { Ceil[(timemax-time0)/delta_time], Name "Input/23Number of steps",
-                    Highlight "LightGrey", ReadOnly 1, Visible (Flag_AnalysisType==1)}
-                ];
-
-  RotorPosition[] = InitialRotorAngle + $Time * wr ;
+  RotorPosition[] = InitialRotorAngle + $Time * wr[] ;
   RotorPosition_deg[] = RotorPosition[]*180/Pi;
 
 //+++

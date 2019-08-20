@@ -21,7 +21,7 @@ p  = mm*12*0.05*1.3;    //rotor
 
 
 Include "generator_stator.geo" ;
-//Include "generator_rotor.geo" ;
+Include "generator_rotor.geo" ;
 
 Mesh.CharacteristicLengthFactor = 1;
 //Mesh 2;

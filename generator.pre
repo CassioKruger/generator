@@ -1,5 +1,5 @@
 $Resolution /* 'Analysis' */
-0 1
+0 2
 $EndResolution
 $DofData /* #0 */
 0 0
@@ -8846,4 +8846,13 @@ $DofData /* #0 */
 10 55551 0 1 8657 1
 10 55552 0 1 8658 1
 10 55553 0 1 8659 1
+$EndDofData
+$DofData /* #1 */
+0 1
+2 4 5
+1 0
+1 0
+2 2
+11 1234 0 5 2 0 0 -1
+13 1234 0 5 1 0 0 -1
 $EndDofData

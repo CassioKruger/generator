@@ -599,10 +599,10 @@ Formulation {
       { Name P ; Type Global ; NameOfSpace Position [P] ; } // position
     }
     Equation {
-      GlobalTerm { DtDof [ Inertia * Dof{V} , {V} ] ; In DomainKin ; }
-      GlobalTerm { [ Friction[] * Dof{V} , {V} ] ; In DomainKin ; }
-      GlobalTerm { [        Torque_mec[] , {V} ] ; In DomainKin ; }
-      GlobalTerm { [       -Torque_mag[] , {V} ] ; In DomainKin ; }
+      GlobalTerm { /*DtDof*/ [ Dof{V} , {V} ] ; In DomainKin ; }  //  rad/s
+      GlobalTerm { [ (rpmAux[]*2*Pi)/60, {V} ] ; In DomainKin ; }
+      //GlobalTerm { [        Torque_mec[], {V} ] ; In DomainKin ; }
+      //GlobalTerm { [       Torque_mag[] , {V} ] ; In DomainKin ; }
 
       GlobalTerm { DtDof [ Dof{P} , {P} ] ; In DomainKin ; }
       GlobalTerm {       [-Dof{V} , {P} ] ; In DomainKin ; }
@@ -622,7 +622,7 @@ Resolution {
       EndIf
       If(Flag_AnalysisType<2)
         { Name A ; NameOfFormulation MagStaDyn_a_2D ; }
-        If(!Flag_ImposedSpeed) // Full dynamics
+        If(Flag_ImposedSpeed) // Full dynamics
           { Name M ; NameOfFormulation Mechanical ; }
         EndIf
       EndIf
@@ -698,12 +698,12 @@ Resolution {
           PostOperation[Get_LocalFields] ;
         EndIf
 
-        If(!Flag_ImposedSpeed) // Full dynamics
+        If(Flag_ImposedSpeed) // Full dynamics
           InitSolution[M];
-	  InitSolution[M]; // Twice for avoiding warning (a = d_t^2 x)
+	        InitSolution[M]; // Twice for avoiding warning (a = d_t^2 x)
         EndIf
 
-        TimeLoopTheta[time0, timemax, delta_time, 1.]{
+        TimeLoopTheta[time0, tempoMax, delta_time[], 1.]{
 	  // Euler implicit (1) -- Crank-Nicolson (0.5)
 	  // FIXME like this theta cannot be controlled by the user
           If(Flag_ParkTransformation && Flag_SrcType_Stator==1)
@@ -729,13 +729,13 @@ Resolution {
             Evaluate[ $Tstator = 0 ];
             Evaluate[ $Trotor = 0 ];
           }
-          If(!Flag_ImposedSpeed)
+          If(Flag_ImposedSpeed)
             Generate[M]; Solve[M]; SaveSolution[M];
             PostOperation[Mechanical] ;
           EndIf
 
           ChangeOfCoordinates[ NodesOf[Rotor_Moving], RotatePZ[delta_theta[]]];
-          If(!Flag_ImposedSpeed)
+          If(Flag_ImposedSpeed)
             // Keep track of previous position
             Evaluate[ $PreviousPosition = $Position ];
           EndIf
@@ -931,7 +931,8 @@ poV     = StrCat[po,"1Voltage [V]/"];
 poF     = StrCat[po,"2Flux linkage [Vs]/"];
 poJL    = StrCat[po,"3Joule Losses [W]/"];
 po_mec  = StrCat["Output - Mechanics/", ResId];
-po_mecT = StrCat[po_mec,"0Torque [Nm]/"];
+po_mecRotor1  = StrCat[po_mec,"0Rotor 1 /"];
+po_mecT = StrCat[po_mec,"1Torque [Nm]/"];
 
 //-------------------------------------------------------------------------------------------
 
@@ -1106,9 +1107,12 @@ PostOperation Mechanical UsingPost Mechanical {
   Print[ V, OnRegion DomainKin, Format Table,
 	 File > StrCat[ResDir,"V", ExtGnuplot], LastTimeStepOnly,
 	 SendToServer StrCat[po_mec,"21Velocity [rad\s]"]{0}, Color "Ivory"] ;//MediumPurple1
-  Print[ Vrpm, OnRegion DomainKin, Format Table,
+  /*Print[ Vrpm, OnRegion DomainKin, Format Table,
 	 File > StrCat[ResDir,"Vrpm", ExtGnuplot], LastTimeStepOnly,
-	 SendToServer StrCat[po_mec,"20Velocity [rpm]"]{0}, Color "Ivory"] ;//MediumPurple1
+	 SendToServer StrCat[po_mec,"20Velocity [rpm]"]{0}, Color "Ivory"] ;//MediumPurple1*/
+  Print[ Vrpm, OnRegion DomainKin, Format Table,
+   File > StrCat[ResDir,"Vrpm1", ExtGnuplot], LastTimeStepOnly,
+   SendToServer StrCat[po_mecRotor1 ,"Velocity [rpm]"]{0}, Color "Red1"] ;//MediumPurple1
 }
 
 If (Flag_ParkTransformation)

@@ -44,12 +44,12 @@ phase_c_minus_int[] = {3,4,15,16,28,29};		//6
 
 i=0; half=1;
 
-/*
+
 //build stator slots
 For i In {0:N_ss-1}
 	 //build two halfs
 	 For half In {0:1}
-*/
+
 	 //Points definitions-----------------------------------------------------------------//
 	 //pontos de uma metade(direita) do slot (ranhura)
 	 dP=newp;
@@ -93,7 +93,7 @@ For i In {0:N_ss-1}
 	 Point(dP+21) = {largura_bob, (176.1630*u)+altura_bob, 0, 1.5*psl};
 	 Point(dP+22) = {0, (176.1630*u)+altura_bob, 0, 1.5*psl};
 	 //Points definitions-----------------------------------------------------------------//
-/*
+
 	 // rotate the built points to the i-th slot position
 	 For t In {dP+0:dP+22}
 	 	Rotate {{0,0,1},{0,0,0}, 2*Pi*i/Qs+2*Pi/Qs/2} {Point{t};}
@@ -104,7 +104,7 @@ For i In {0:N_ss-1}
 		 	Symmetry {Cos(2*Pi*i/Qs+2*Pi/Qs/2),Sin(2*Pi*i/Qs+2*Pi/Qs/2),0,0} {Point{t};}
 		 EndFor
 	 EndIf
-*/
+
 	 //Lines definitions-----------------------------------------------------------------//
 	dR=newl-1;
 	 //linha ventical da entrada do slot
@@ -326,10 +326,10 @@ For i In {0:N_ss-1}
 	 Line Loop(newll) = {dR+14, dR+7, dR+8, -(dR+15), -(dR+6)};
 	 dH = news; Plane Surface(news) = rev*{newll-1};
 	 StatorAirgapLayer_[] += dH;
-/*
+
 	 EndFor
 EndFor
-*/
+
 // Completing moving band
 NN = #StatorSliding_[] ;
 k1 = (NbrPolesInModel==1)?NbrPolesInModel:NbrPolesInModel+1;
